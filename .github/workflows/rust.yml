@@ -15,11 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 캐시: rustfmt용
+      - name: Cache rustfmt
+        uses: actions/cache@v3
+        with:
+          path: ~/.rustup/toolchains
+          key: ${{ runner.os }}-rust-toolchain
+          restore-keys: |
+            ${{ runner.os }}-rust-toolchain
+
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+
       - name: Check formatting
         uses: actions-rs/rustfmt-check@v1
         with:
@@ -30,11 +41,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 캐시: cargo registry + target
+      - name: Cache cargo registry & build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            vulncat/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+
       - name: Run clippy
         uses: actions-rs/clippy-check@v1
         with:
@@ -46,10 +71,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 캐시: cargo registry
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-registry
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry
+
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+
       - name: Run cargo-audit
         uses: rustsec/cargo-audit-action@v1
         with:
@@ -62,13 +100,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 캐시: shared build artifacts
+      - name: Cache build
+        uses: actions/cache@v3
+        with:
+          path: vulncat/target
+          key: ${{ runner.os }}-build-${{ hashFiles('vulncat/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-
+
       - name: Install toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+
       - name: Build
         working-directory: vulncat
         run: cargo build --verbose
+
       - name: Run tests
         working-directory: vulncat
         run: cargo test --verbose
