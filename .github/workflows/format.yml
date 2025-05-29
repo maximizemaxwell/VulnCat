@@ -3,31 +3,27 @@ name: Rustfmt
 on:
   push:
     branches: ["main"]
-    paths:
-      - "vulncat/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "vulncat/**"
+
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
   fmt:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vulncat
+
     steps:
       - uses: actions/checkout@v4
-
-      # install Rust toolchain
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
-
-      # rustfmt component
       - name: Add rustfmt
         run: rustup component add rustfmt
-
-      # check format
       - name: Check formatting
-        working-directory: vulncat
         run: cargo fmt --all -- --check

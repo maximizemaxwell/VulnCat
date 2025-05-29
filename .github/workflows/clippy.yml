@@ -3,34 +3,28 @@ name: Clippy
 on:
   push:
     branches: ["main"]
-    paths:
-      - "vulncat/**"
   pull_request:
     branches: ["main"]
-    paths:
-      - "vulncat/**"
 
 env:
+  CARGO_TERM_COLOR: always
   RUSTFLAGS: "-Dwarnings"
 
 jobs:
   clippy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vulncat
+
     steps:
       - uses: actions/checkout@v4
-
-      # Rust toolchain
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
-
-      # clippy component
       - name: Add Clippy
         run: rustup component add clippy
-
-      # Warnings as errors
       - name: Run Clippy
-        working-directory: vulncat
         run: cargo clippy --all-targets --all-features
