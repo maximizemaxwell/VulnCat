@@ -1,23 +1,20 @@
 [package]
 name = "vulncat"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 authors = ["Eunsoo Max Eun <naturale@hufs.ac.kr>"]
 
 [dependencies]
 clap = { version = "4.1", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-ndarray = "0.15"           # for tensor operations
-ndarray-rand = "0.14"      # for random init
-anyhow = "1.0"             # error handling
-candle-core = { git = "https://github.com/huggingface/candle.git", features = ["metal"] }
-candle-nn = { git = "https://github.com/huggingface/candle.git", features = ["metal"] }
-tokenizers = "*"
+anyhow = "1.0"
+rand = "0.8"
+regex = "1.10"
+candle-core = { git = "https://github.com/huggingface/candle.git" }
+candle-nn = { git = "https://github.com/huggingface/candle.git" }
+tokenizers = "0.15"
 
-[patch."https://github.com/huggingface/candle.git"]
-candle-core = {git = "https://github.com/nihalpasham/candle"}
-candle-nn = {git = "https://github.com/nihalpasham/candle"}
 
 [dev-dependencies]
 assert_cmd = "2.0"         # CLI integration tests

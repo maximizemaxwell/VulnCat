@@ -1,0 +1,66 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# Cargo lock file (for libraries, it's often excluded)
+Cargo.lock
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Model checkpoints and outputs
+/checkpoints/
+*.safetensors
+*.pt
+*.bin
+
+# Data files (keep the dataset directory but not large files)
+*.json
+!dataset/.gitkeep
+!example_dataset.json
+
+# Evaluation and test outputs
+evaluation_report.json
+/outputs/
+/results/
+*.log
+
+# Python virtual environments (if using Python scripts)
+venv/
+.env
+__pycache__/
+*.pyc
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Test coverage
+*.profraw
+*.profdata
+/coverage/
+
+# Documentation build
+/docs/_build/
+/docs/_site/
+
+# OS generated files
+Thumbs.db
+.directory
+
+# Backup files
+*.bak
+*.backup
+
+# Security - never commit secrets
+*.key
+*.pem
+.env*
+!.env.example
