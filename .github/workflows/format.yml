@@ -2,9 +2,11 @@ name: Rustfmt
 
 on:
   push:
+    branches: ["main"]
     paths:
       - "vulncat/**"
   pull_request:
+    branches: ["main"]
     paths:
       - "vulncat/**"
 
