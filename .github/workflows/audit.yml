@@ -1,0 +1,27 @@
+name: Audit
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Every Sunday at midnight
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Toolchain installation
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      # cargo-audit
+      - name: Install cargo-audit
+        run: cargo install --locked cargo-audit
+
+      # check known vulnerabilities
+      - name: Run cargo-audit
+        working-directory: vulncat
+        run: cargo audit
