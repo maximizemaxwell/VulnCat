@@ -1,6 +1,21 @@
 [package]
 name = "vulncat"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
+authors = ["Eunsoo Max Eun <naturale@hufs.ac.kr>"]
 
 [dependencies]
+clap = { version = "4.1", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+rand = "0.8"
+regex = "1.10"
+candle-core = { git = "https://github.com/huggingface/candle.git" }
+candle-nn = { git = "https://github.com/huggingface/candle.git" }
+tokenizers = "0.15"
+
+
+[dev-dependencies]
+assert_cmd = "2.0"         # CLI integration tests
+predicates = "2.1"         # assertions helpers
