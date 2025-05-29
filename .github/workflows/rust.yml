@@ -1,4 +1,4 @@
-name: Rust
+name: Rust CI
 
 on:
   push:
@@ -10,14 +10,65 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  fmt:
+    name: rustfmt
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-      - name: move to project directory
-        run: cd vulncat
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Check formatting
+        uses: actions-rs/rustfmt-check@v1
+        with:
+          working-directory: vulncat
+
+  clippy:
+    name: clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+      - name: Run clippy
+        uses: actions-rs/clippy-check@v1
+        with:
+          working-directory: vulncat
+          args: --all-targets -- -D warnings
+
+  audit:
+    name: cargo-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Run cargo-audit
+        uses: rustsec/cargo-audit-action@v1
+        with:
+          working-directory: vulncat
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-test:
+    name: build & test
+    needs: [fmt, clippy, audit]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
       - name: Build
+        working-directory: vulncat
         run: cargo build --verbose
       - name: Run tests
+        working-directory: vulncat
         run: cargo test --verbose
